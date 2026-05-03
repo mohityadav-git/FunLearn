@@ -1,0 +1,124 @@
+.explore-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.explore-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.explore-title-section h1 {
+  font-size: 2.25rem;
+  color: var(--text-dark);
+}
+
+.featured-topic {
+  padding: 3rem;
+  background: var(--bg-card);
+  border: 2px solid var(--primary);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
+}
+
+.topic-meta {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: 0.1em;
+}
+
+.topic-main h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.topic-main p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin-bottom: 2.5rem;
+}
+
+.topic-actions {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.reward-info {
+  font-weight: 800;
+  color: var(--success);
+  font-size: 0.95rem;
+}
+
+.explore-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.explore-card {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.explore-card:hover {
+  transform: translateY(-5px);
+}
+
+.explore-card-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.explore-card-text h3 {
+  font-size: 1.125rem;
+  margin-bottom: 0.25rem;
+}
+
+.explore-card-text p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.search-deep-dive {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2.5rem;
+  background: var(--bg-soft);
+}
+
+.search-bar-mock {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  min-width: 300px;
+  border: 1px solid var(--glass-border);
+}
+
+@media (max-width: 840px) {
+  .search-deep-dive {
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+  }
+}

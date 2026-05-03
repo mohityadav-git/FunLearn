@@ -1,0 +1,498 @@
+/* ═══════════════════════════════════════════════
+   STUDY PLAN — Toddler Game Adventure Map
+   ═══════════════════════════════════════════════ */
+
+.study-plan-game {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  max-width: 680px;
+  margin: 0 auto;
+  padding-bottom: 4rem;
+}
+
+/* ── Fun Header ────────────────────────────────── */
+.game-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.game-title-area {
+  text-align: center;
+  width: 100%;
+}
+
+.game-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.game-title-mascot {
+  font-size: 2.5rem;
+  animation: wiggle 2s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+}
+
+.game-header h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #4f46e5, #ec4899, #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.game-subtitle {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-top: 0.35rem;
+}
+
+/* ── Adventure Path ────────────────────────────── */
+.adventure-path {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+  position: relative;
+}
+
+/* Vertical dashed path between islands */
+.adventure-path::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 100%;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--primary-light) 0px,
+    var(--primary-light) 12px,
+    transparent 12px,
+    transparent 24px
+  );
+  border-radius: 4px;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+/* ── Island Group ──────────────────────────────── */
+.island-group {
+  position: relative;
+  z-index: 1;
+  animation: island-appear 0.6s ease-out forwards;
+}
+
+@keyframes island-appear {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.island-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 20px rgba(79, 70, 229, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.island-header:hover {
+  transform: scale(1.02);
+}
+
+.island-emoji {
+  font-size: 2.5rem;
+  animation: float-gentle 3s ease-in-out infinite;
+}
+
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.island-title {
+  flex: 1;
+}
+
+.island-title h2 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.island-name {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.island-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  background: var(--accent-light);
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-full);
+}
+
+/* ── Bubble Path ───────────────────────────────── */
+.bubble-path {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  position: relative;
+}
+
+/* ── Individual Game Bubble ────────────────────── */
+.game-bubble {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  position: relative;
+  padding: 1.25rem 0;
+  cursor: pointer;
+  animation: bubble-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes bubble-pop {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.game-bubble.locked {
+  cursor: not-allowed;
+}
+
+/* Connector line between bubbles */
+.connector-line {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 20px;
+  background: var(--primary-light);
+  border-radius: 4px;
+}
+
+.game-bubble.completed .connector-line {
+  background: var(--success);
+}
+
+/* ── The Bubble Circle ─────────────────────────── */
+.bubble-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 4px solid transparent;
+}
+
+.bubble-circle.completed {
+  background: var(--bubble-bg);
+  border-color: rgba(255,255,255,0.3);
+  box-shadow: 0 8px 25px var(--bubble-shadow);
+}
+
+.bubble-circle.current {
+  background: var(--bubble-bg);
+  border-color: rgba(255,255,255,0.4);
+  box-shadow: 0 8px 30px var(--bubble-shadow);
+}
+
+.bubble-circle.locked {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(8px);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: none;
+}
+
+.game-bubble:not(.locked):hover .bubble-circle {
+  transform: scale(1.12);
+  box-shadow: 0 12px 35px var(--bubble-shadow);
+}
+
+.bubble-animal {
+  font-size: 2.5rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+
+.lock-icon {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+/* Bounce for current level */
+.game-bubble.bounce .bubble-circle {
+  animation: level-bounce 2s ease-in-out infinite;
+}
+
+@keyframes level-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* ── Stars ─────────────────────────────────────── */
+.bubble-stars {
+  position: absolute;
+  bottom: -6px;
+  display: flex;
+  gap: 2px;
+  background: var(--bg-card);
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.mini-star {
+  transition: transform 0.3s ease;
+}
+
+.mini-star.earned {
+  animation: star-sparkle 0.6s ease-out;
+}
+
+@keyframes star-sparkle {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+
+/* ── Completed Badge ───────────────────────────── */
+.completed-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 28px;
+  height: 28px;
+  background: var(--success);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--bg-card);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+  animation: badge-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes badge-pop {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+
+/* ── Pulse Ring ────────────────────────────────── */
+.pulse-ring {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 3px solid;
+  border-color: var(--bubble-shadow);
+  animation: ring-pulse 2s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes ring-pulse {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+
+/* ── Bubble Label ──────────────────────────────── */
+.bubble-label {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.bubble-type {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text-dark);
+}
+
+.locked .bubble-type {
+  color: var(--text-muted);
+}
+
+/* ── Level Modal ───────────────────────────────── */
+.level-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fade-in 0.3s ease;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.level-modal-content {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: var(--shadow-hover);
+  animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: var(--bg-soft);
+  border-radius: var(--radius-md);
+  border: 2px solid transparent;
+}
+
+.task-item.completed {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.task-item.locked {
+  opacity: 0.6;
+}
+
+.task-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.task-title {
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.task-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.task-action {
+  display: flex;
+  align-items: center;
+}
+
+/* ── Empty Island ──────────────────────────────── */
+.empty-island {
+  text-align: center;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.empty-emoji {
+  font-size: 3rem;
+  animation: float-gentle 3s ease-in-out infinite;
+}
+
+.empty-island h3 {
+  font-size: 1.25rem;
+  color: var(--text-dark);
+}
+
+.empty-island p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  max-width: 300px;
+}
+
+/* ── Responsive ────────────────────────────────── */
+@media (max-width: 768px) {
+  .study-plan-game {
+    gap: 2rem;
+  }
+
+  .game-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .game-title-mascot {
+    font-size: 2rem;
+  }
+
+  .bubble-circle {
+    width: 80px;
+    height: 80px;
+  }
+
+  .bubble-animal {
+    font-size: 2rem;
+  }
+
+  .island-header {
+    padding: 1rem 1.25rem;
+  }
+
+  .island-emoji {
+    font-size: 2rem;
+  }
+}

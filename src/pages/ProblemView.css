@@ -1,0 +1,113 @@
+.problem-view-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 8rem);
+  gap: 1rem;
+}
+
+.problem-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.problem-main {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+  min-height: 0; /* Important for flex child scroll */
+}
+
+.problem-left-panel {
+  flex: 4;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.problem-right-panel {
+  flex: 5;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  overflow-y: auto;
+  box-shadow: var(--shadow-sm);
+}
+
+.panel-title {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.question-content h2 {
+  font-size: 1.5rem;
+  line-height: 1.4;
+  color: var(--text-dark);
+}
+
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.problem-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  margin-top: auto;
+}
+
+.result-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+}
+
+.result-banner.success {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+}
+
+.result-banner.error {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+}
+
+@media (max-width: 1024px) {
+  .problem-main {
+    flex-direction: column;
+  }
+  
+  .problem-view-container {
+    height: auto;
+  }
+  
+  .problem-left-panel, .problem-right-panel {
+    flex: none;
+    overflow-y: visible;
+  }
+}
