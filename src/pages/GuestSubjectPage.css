@@ -1,0 +1,43 @@
+.guest-subject-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  background-color: var(--bg-color, #ffffff);
+  color: var(--text-color, #0f172a);
+}
+
+.guest-subject-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  margin-top: 76px; /* Offset for sticky navbar */
+}
+
+.w3-top-nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.intro-lead {
+  font-size: 1.5rem;
+  color: #64748b;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.interactive-preview-container {
+  max-width: 600px;
+  margin-top: 2rem;
+  perspective: 1000px;
+}
+
+.interactive-preview-container .mock-editor {
+  transform: none; /* remove the 3D tilt for the tutorial page */
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+}
+
+.interactive-preview-container .mock-editor:hover {
+  transform: none;
+}

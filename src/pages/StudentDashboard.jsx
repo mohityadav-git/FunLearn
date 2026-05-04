@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Star, Zap, PlayCircle, Calculator, BookA, Brain, Shapes, Trophy, CheckCircle2, ChevronRight, Search } from 'lucide-react';
 import Button from '../components/Button';
+import SidebarRight from '../components/SidebarRight';
 import './StudentDashboard.css';
 
 const StudentDashboard = ({ stars, solvedQuestions, bank, libraryByClass, currentUser }) => {
@@ -19,8 +20,9 @@ const StudentDashboard = ({ stars, solvedQuestions, bank, libraryByClass, curren
   }));
 
   return (
-    <div className="student-dashboard animate-slide-up">
-      <section className="welcome-banner card-panel">
+    <div style={{ display: 'flex', gap: '2rem', padding: '2rem', maxWidth: '1600px', margin: '0 auto' }}>
+      <div className="student-dashboard animate-slide-up" style={{ flex: 1, minWidth: 0 }}>
+        <section className="welcome-banner card-panel">
         <div className="welcome-content">
           <h1>Welcome back, Alex! 👋</h1>
           <p>Ready to conquer some new quests today?</p>
@@ -92,6 +94,8 @@ const StudentDashboard = ({ stars, solvedQuestions, bank, libraryByClass, curren
           </div>
         </section>
       </div>
+      </div>
+      <SidebarRight stars={stars} />
     </div>
   );
 };

@@ -1,141 +1,30 @@
-.sidebar-left {
+.student-subnav {
   display: flex;
-  flex-direction: column;
-  padding: 1.5rem;
-  height: calc(100vh - 4rem);
-  position: sticky;
-  top: 2rem;
-  margin-top: 1rem;
-  min-width: 240px;
-  background: var(--bg-card);
-  border: none;
-  box-shadow: var(--shadow-sm);
-  border-radius: var(--radius-lg);
+  background-color: var(--secondary); /* Matches #282A35 */
+  overflow-x: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  white-space: nowrap;
 }
 
-.sidebar-header {
-  margin-bottom: 2.5rem;
-  padding: 0.5rem;
-}
-
-.sidebar-logo {
+.subnav-link {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  font-weight: 800;
-  font-size: 1.1rem;
-  color: var(--text-dark);
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
   gap: 0.5rem;
-  flex: 1;
-}
-
-.nav-link {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.875rem 1rem;
+  background: transparent;
+  color: #fff;
   text-decoration: none;
-  color: var(--text-muted);
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.nav-link:hover {
-  background: var(--bg-soft);
-  color: var(--primary);
-  transform: translateX(5px);
-}
-
-.nav-link.active {
-  background: var(--primary-light);
-  color: var(--primary);
-}
-
-.nav-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.sidebar-footer {
-  margin-top: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.logout-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  padding: 0.8rem 1rem;
-  border: 2px solid var(--bg-soft);
-  border-radius: var(--radius-md);
-  background: var(--bg-card);
-  color: var(--text-muted);
-  font-size: 0.88rem;
-  font-weight: 700;
+  padding: 12px 24px;
+  font-size: 1rem;
   font-family: inherit;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: background-color 0.3s;
 }
 
-.logout-btn:hover {
-  background: rgba(239, 68, 68, 0.08);
-  border-color: rgba(239, 68, 68, 0.3);
-  color: #ef4444;
-  transform: translateX(3px);
+.subnav-link:hover {
+  background-color: #000;
 }
 
-.upgrade-card {
-  background: linear-gradient(135deg, var(--secondary), #f472b6);
-  padding: 1.25rem;
-  border-radius: var(--radius-md);
-  color: white;
-  text-align: center;
-}
-
-.upgrade-card p {
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-}
-
-.upgrade-btn {
-  background: white;
-  color: var(--secondary);
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-full);
-  font-weight: 800;
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.upgrade-btn:hover {
-  transform: scale(1.05);
-}
-
-@media (max-width: 1024px) {
-  .sidebar-left {
-    min-width: 80px;
-    width: 80px;
-    padding: 1rem;
-  }
-  
-  .nav-label, .sidebar-logo span, .upgrade-card {
-    display: none;
-  }
-  
-  .nav-link {
-    justify-content: center;
-    padding: 1rem;
-  }
+.subnav-link.active {
+  background-color: var(--primary); /* #04AA6D */
+  font-weight: bold;
 }

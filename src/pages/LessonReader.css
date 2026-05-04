@@ -1,7 +1,6 @@
 .w3-lesson-container {
   display: flex;
   height: calc(100vh - 80px); /* Adjust based on navbar height */
-  margin: -2rem; /* Push to edges to override App padding */
   background-color: var(--bg-light);
   overflow: hidden;
 }
@@ -14,6 +13,7 @@
   padding: 1rem 0;
   display: flex;
   flex-direction: column;
+  transition: transform 0.3s ease;
 }
 
 .w3-sidebar-header {
@@ -156,24 +156,77 @@
   font-size: 1.1rem;
 }
 
+.w3-mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-dark);
+  padding: 0;
+}
+
+.w3-mobile-close-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  color: var(--text-dark);
+}
+
+.w3-sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 95;
+}
+
 @media (max-width: 768px) {
+  .w3-mobile-menu-btn {
+    display: block;
+  }
+  
+  .w3-mobile-close-btn {
+    display: block;
+  }
+  
+  .w3-sidebar-overlay {
+    display: block;
+  }
+  
   .w3-lesson-container {
     flex-direction: column;
     margin: -1rem;
   }
   
   .w3-sidebar {
-    width: 100%;
-    height: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 280px;
+    z-index: 100;
+    transform: translateX(-100%);
     border-right: none;
-    border-bottom: 1px solid var(--border-color);
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  }
+  
+  .w3-sidebar.open {
+    transform: translateX(0);
   }
   
   .w3-main-content {
+    width: 100%;
     padding: 2rem 1.5rem;
   }
   
   .w3-chapter-title {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
 }

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, PlusCircle, Save, Pencil, Trash2, Search } from 'lucide-react';
 import Button from '../components/Button';
+import { DefaultEditor } from 'react-simple-wysiwyg';
+import { stripFormatting } from '../utils/textFormatter';
 import './ManageLessons.css';
 
 const VISUALIZERS = [
@@ -219,18 +221,18 @@ const ManageLessons = ({ lessonsByClass, onUpdateLessons, libraryByClass, onUpda
                     </div>
                     <div className="editor-field">
                       <label>Main Content</label>
-                      <textarea 
+                      <DefaultEditor 
                         value={editForm.content} 
                         onChange={(e) => setEditForm({...editForm, content: e.target.value})}
-                        placeholder="Write your lesson text here..."
+                        style={{ background: '#fff', borderRadius: '8px', minHeight: '150px' }}
                       />
                     </div>
                     <div className="editor-field">
                       <label>Example Code/Text (Optional)</label>
-                      <textarea 
+                      <DefaultEditor 
                         value={editForm.example || ""} 
                         onChange={(e) => setEditForm({...editForm, example: e.target.value})}
-                        placeholder="Example text..."
+                        style={{ background: '#fff', borderRadius: '8px', minHeight: '100px' }}
                       />
                     </div>
                     <div className="editor-actions">
@@ -257,7 +259,7 @@ const ManageLessons = ({ lessonsByClass, onUpdateLessons, libraryByClass, onUpda
                       Visualizer: <strong>{VISUALIZERS.find(v => v.id === slide.visualizer)?.label || "None"}</strong>
                     </p>
                     <p style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                      {slide.content}
+                      {stripFormatting(slide.content)}
                     </p>
                   </>
                 )}
@@ -288,18 +290,18 @@ const ManageLessons = ({ lessonsByClass, onUpdateLessons, libraryByClass, onUpda
                   </div>
                   <div className="editor-field">
                     <label>Main Content</label>
-                    <textarea 
+                    <DefaultEditor 
                       value={editForm.content} 
                       onChange={(e) => setEditForm({...editForm, content: e.target.value})}
-                      placeholder="Write your lesson text here..."
+                      style={{ background: '#fff', borderRadius: '8px', minHeight: '150px' }}
                     />
                   </div>
                   <div className="editor-field">
                     <label>Example Code/Text (Optional)</label>
-                    <textarea 
+                    <DefaultEditor 
                       value={editForm.example || ""} 
                       onChange={(e) => setEditForm({...editForm, example: e.target.value})}
-                      placeholder="Example text..."
+                      style={{ background: '#fff', borderRadius: '8px', minHeight: '100px' }}
                     />
                   </div>
                   <div className="editor-actions">

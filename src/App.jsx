@@ -4,7 +4,9 @@ import './App.css';
 import StudentDashboard from './pages/StudentDashboard';
 import InteractiveExam from './pages/InteractiveExam';
 import ExamResults from './pages/ExamResults';
-import RoleSelection from './pages/RoleSelection';
+import LandingPage from './pages/LandingPage';
+import GuestSubjectPage from './pages/GuestSubjectPage';
+import LoginModal from './components/LoginModal';
 import TeacherDashboard from './pages/TeacherDashboard';
 import CreateExam from './pages/CreateExam';
 import ManageQuestions from './pages/ManageQuestions';
@@ -15,14 +17,12 @@ import Button from './components/Button';
 import SidebarLeft from './components/SidebarLeft';
 import SidebarRight from './components/SidebarRight';
 import SubjectHub from './pages/SubjectHub';
-import Library from './pages/Library';
 import StudyPlan from './pages/StudyPlan';
 import Explore from './pages/Explore';
 import SubjectQuest from './pages/SubjectQuest';
 import Practice from './pages/Practice';
 import Achievements from './pages/Achievements';
 import Settings from './pages/Settings';
-import MiniGames from './pages/MiniGames';
 import LessonReader from './pages/LessonReader';
 import ManageLessons from './pages/ManageLessons';
 import RoadmapTest from './pages/RoadmapTest';
@@ -109,6 +109,10 @@ const AppContent = ({ stars, questionBank, solvedQuestions, availableExams, hand
   const navigate = useNavigate();
   const isStudentPortal = location.pathname.startsWith('/student');
   const isExamMode = location.pathname.startsWith('/exam/') || location.pathname.startsWith('/solve/');
+  const isLibraryMode = location.pathname.includes('/library');
+  const isGuestRoute = location.pathname === '/' || location.pathname.startsWith('/guest');
+  
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const onLogoutClick = () => {
     handleLogout();
@@ -117,30 +121,39 @@ const AppContent = ({ stars, questionBank, solvedQuestions, availableExams, hand
 
   return (
     <div className={`app-container ${isStudentPortal && !isExamMode ? 'with-sidebars' : ''}`}>
-      <header className="app-header card-panel">
-        <div className="logo" style={{ cursor: 'pointer' }} onClick={() => window.location.href = '/'}>
-          <span className="logo-icon">🚀</span> FunLearn
-        </div>
-        <div className="user-profile" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <ThemeToggle />
-          {currentUser && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ fontWeight: 'bold', color: 'var(--text-dark)' }}>
-                {currentUser.role === 'student' ? `${currentUser.name} (${currentUser.classLevel})` : 'Teacher'}
-              </span>
-              <Button variant="ghost" size="sm" onClick={onLogoutClick}>Logout</Button>
-            </div>
-          )}
-          <div className="avatar">😊</div>
-        </div>
-      </header>
+      {!isGuestRoute && (
+        <header className="app-header">
+          <div className="logo" style={{ cursor: 'pointer' }} onClick={() => window.location.href = '/'}>
+            <span className="logo-icon">🚀</span> FunLearn
+          </div>
+          <div className="user-profile" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <ThemeToggle />
+            {currentUser && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ fontWeight: 'bold', color: 'var(--text-dark)' }}>
+                  {currentUser.role === 'student' ? `${currentUser.name} (${currentUser.classLevel})` : 'Teacher'}
+                </span>
+                <Button variant="outline" size="sm" onClick={onLogoutClick} style={{ color: 'var(--text-dark)', borderColor: 'rgba(0,0,0,0.2)' }}>Logout</Button>
+              </div>
+            )}
+            <div className="avatar">😊</div>
+          </div>
+        </header>
+      )}
 
-      <div className="layout-row">
-        {isStudentPortal && !isExamMode && <SidebarLeft />}
-        
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+        onLogin={handleLogin} 
+      />
+
+      {isStudentPortal && !isExamMode && !isLibraryMode && <SidebarLeft />}
+
+      <div className={isGuestRoute ? "guest-layout-row" : "layout-row"}>
         <main className="main-content">
           <Routes>
-            <Route path="/" element={<RoleSelection onLogin={handleLogin} />} />
+            <Route path="/" element={<LandingPage onOpenLogin={() => setIsLoginModalOpen(true)} />} />
+            <Route path="/guest/subject/:subjectName" element={<GuestSubjectPage onOpenLogin={() => setIsLoginModalOpen(true)} />} />
             <Route 
               path="/student" 
               element={<StudentDashboard stars={stars} bank={questionBank} solvedQuestions={solvedQuestions} exams={availableExams} libraryByClass={libraryByClass} currentUser={currentUser} />} 
@@ -151,7 +164,11 @@ const AppContent = ({ stars, questionBank, solvedQuestions, availableExams, hand
             />
             <Route 
               path="/student/subject/:subjectName/library" 
-              element={<Library libraryByClass={libraryByClass} currentUser={currentUser} />} 
+              element={<LessonReader lessonsByClass={lessonsByClass} libraryByClass={libraryByClass} currentUser={currentUser} />} 
+            />
+            <Route 
+              path="/student/subject/:subjectName/library/:topicId" 
+              element={<LessonReader lessonsByClass={lessonsByClass} libraryByClass={libraryByClass} currentUser={currentUser} />} 
             />
             <Route 
               path="/student/subject/:subjectName/study-plan" 
@@ -167,7 +184,7 @@ const AppContent = ({ stars, questionBank, solvedQuestions, availableExams, hand
             />
             <Route 
               path="/student/subject/:subjectName/read/:topicId" 
-              element={<LessonReader lessonsByClass={lessonsByClass} currentUser={currentUser} onReadComplete={handleUpdateRoadmapProgress} />} 
+              element={<LessonReader lessonsByClass={lessonsByClass} libraryByClass={libraryByClass} currentUser={currentUser} onReadComplete={handleUpdateRoadmapProgress} />} 
             />
              <Route 
               path="/student/subject/:subjectName/quest" 
@@ -179,7 +196,6 @@ const AppContent = ({ stars, questionBank, solvedQuestions, availableExams, hand
             />
             <Route path="/student/achievements" element={<Achievements stars={stars} solvedQuestions={solvedQuestions} bank={questionBank} />} />
             <Route path="/student/settings" element={<Settings />} />
-            <Route path="/student/games" element={<MiniGames />} />
             <Route 
               path="/solve/:questionId" 
               element={<InteractiveQuestion bank={questionBank} onSolve={handleQuestionSolved} />} 
@@ -215,7 +231,6 @@ const AppContent = ({ stars, questionBank, solvedQuestions, availableExams, hand
           </Routes>
         </main>
 
-        {isStudentPortal && !isExamMode && <SidebarRight stars={stars} />}
         {isStudentPortal && <StudentChatbot currentUser={currentUser} />}
       </div>
     </div>

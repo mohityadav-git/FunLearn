@@ -54,7 +54,7 @@ const StudentChatbot = ({ currentUser }) => {
     }
 
     if (lowerText.includes('help')) {
-      return "I can help you find your way around! You can check your Subject Hubs for lessons, the Practice Arena for questions, or Mini Games for some fun!";
+      return "I can help you find your way around! You can check your Subject Hubs for lessons or the Practice Arena for questions!";
     }
 
     return "That's a great question! 🤔 Since I'm just a demo AI right now, I don't know the exact answer, but I encourage you to check your Library or ask your teacher. Keep exploring!";

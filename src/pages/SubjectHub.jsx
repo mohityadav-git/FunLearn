@@ -12,7 +12,7 @@ const SubjectHub = () => {
     {
       id: 'library',
       title: 'Library',
-      description: 'Access textbooks, reference materials, and lesson notes.',
+      description: 'The ultimate W3Schools-style continuous learning manual.',
       icon: <Book size={40} />,
       color: '#3b82f6',
       bg: '#dbeafe'

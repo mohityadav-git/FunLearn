@@ -1,8 +1,26 @@
-import React from 'react';
-import { Trash2, Image as ImageIcon } from 'lucide-react';
+import React, { useState } from 'react';
+import { Trash2, Image as ImageIcon, Calculator } from 'lucide-react';
+import { DefaultEditor } from 'react-simple-wysiwyg';
 import Button from './Button';
 
+const mathSymbols = ['²', '³', '½', '¼', '¾', '√', 'π', 'θ', '°', '≤', '≥', '±', '≠', '∞', 'α', 'β', 'γ', 'Δ', 'Σ', '÷', '×', '≈'];
+
 const QuestionEditor = ({ question, qIndex, onUpdate, onRemove, hideHeader = false }) => {
+  const [activeInput, setActiveInput] = useState({ type: 'text', index: null });
+  const [showKeyboard, setShowKeyboard] = useState(false);
+
+  const insertSymbol = (sym) => {
+    if (activeInput.type === 'text') {
+      updateField('text', (question.text || '') + sym);
+    } else if (activeInput.type === 'option' && activeInput.index !== null) {
+      const textValue = typeof question.options[activeInput.index] === 'string' 
+        ? question.options[activeInput.index] 
+        : question.options[activeInput.index].text || '';
+      updateOptionText(activeInput.index, textValue + sym);
+    } else if (activeInput.type === 'hint') {
+      updateField('hint', (question.hint || '') + sym);
+    }
+  };
   const updateField = (field, value) => {
     onUpdate({ ...question, [field]: value });
   };
@@ -55,13 +73,38 @@ const QuestionEditor = ({ question, qIndex, onUpdate, onRemove, hideHeader = fal
       )}
 
       <div className="qb-body" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '-1rem' }}>
+          <Button variant="outline" size="sm" onClick={() => setShowKeyboard(!showKeyboard)} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            <Calculator size={16} /> {showKeyboard ? 'Hide Math Symbols' : 'Show Math Symbols'}
+          </Button>
+        </div>
+        
+        {showKeyboard && (
+          <div className="special-keyboard glass-panel" style={{ padding: '1rem', borderRadius: '8px', display: 'flex', flexWrap: 'wrap', gap: '0.5rem', background: '#f8fafc', border: '1px solid #cbd5e1' }}>
+            {mathSymbols.map(sym => (
+              <button
+                key={sym}
+                onClick={() => insertSymbol(sym)}
+                style={{ width: '36px', height: '36px', borderRadius: '6px', border: '1px solid #e2e8f0', background: '#fff', fontSize: '1.125rem', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}
+                className="hover-bg-primary hover-text-white"
+                title={`Insert ${sym}`}
+              >
+                {sym}
+              </button>
+            ))}
+            <div style={{ width: '100%', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
+              Click a symbol to append it to the currently focused input field.
+            </div>
+          </div>
+        )}
+
         <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           <label style={{ fontSize: '0.875rem', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Question Text</label>
-          <input 
+          <DefaultEditor 
             value={question.text || ''} 
             onChange={(e) => updateField('text', e.target.value)} 
-            placeholder="What is shown below?" 
-            style={{ padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #e2e8f0', width: '100%', boxSizing: 'border-box' }}
+            onFocus={() => setActiveInput({ type: 'text', index: null })}
+            style={{ background: '#fff', borderRadius: '8px', minHeight: '100px' }}
           />
         </div>
 
@@ -109,13 +152,15 @@ const QuestionEditor = ({ question, qIndex, onUpdate, onRemove, hideHeader = fal
                   
                   <div className="option-content-builder" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     <div className="opt-input-wrapper" style={{ display: 'flex', gap: '0.5rem' }}>
-                      <input 
-                        value={textValue} 
-                        onChange={(e) => updateOptionText(oIndex, e.target.value)} 
-                        placeholder={`Option ${oIndex + 1} Text`} 
-                        style={{ flex: 1, padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #cbd5e1' }}
-                      />
-                      <label className="icon-button" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '45px', background: '#f1f5f9', borderRadius: '8px', cursor: 'pointer', transition: 'background 0.2s' }}>
+                      <div style={{ flex: 1 }}>
+                        <DefaultEditor 
+                          value={textValue} 
+                          onChange={(e) => updateOptionText(oIndex, e.target.value)} 
+                          onFocus={() => setActiveInput({ type: 'option', index: oIndex })}
+                          style={{ background: '#fff', borderRadius: '8px', minHeight: '80px' }}
+                        />
+                      </div>
+                      <label className="icon-button" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '45px', background: '#f1f5f9', borderRadius: '8px', cursor: 'pointer', transition: 'background 0.2s', alignSelf: 'flex-start', height: '42px' }}>
                         <input 
                           type="file" 
                           accept="image/*" 
@@ -141,11 +186,11 @@ const QuestionEditor = ({ question, qIndex, onUpdate, onRemove, hideHeader = fal
 
         <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           <label style={{ fontSize: '0.875rem', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Hint (Optional)</label>
-          <input 
+          <DefaultEditor 
             value={question.hint || ''} 
             onChange={(e) => updateField('hint', e.target.value)} 
-            placeholder="E.g. It has 4 sides!" 
-            style={{ padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #e2e8f0', width: '100%', boxSizing: 'border-box' }}
+            onFocus={() => setActiveInput({ type: 'hint', index: null })}
+            style={{ background: '#fff', borderRadius: '8px', minHeight: '100px' }}
           />
         </div>
       </div>

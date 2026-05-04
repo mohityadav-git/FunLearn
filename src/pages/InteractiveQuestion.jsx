@@ -74,7 +74,7 @@ const InteractiveQuestion = ({ bank, onSolve }) => {
             Question Description
           </div>
           <div className="question-content">
-            <h2>{question.text}</h2>
+            <h2 dangerouslySetInnerHTML={{ __html: question.text }} />
             {question.imageUrl && (
               <div className="question-image-wrapper">
                 <img src={question.imageUrl} alt="Question" className="question-image" />
@@ -123,9 +123,11 @@ const InteractiveQuestion = ({ bank, onSolve }) => {
                   style={{ justifyContent: 'flex-start', textAlign: 'left' }}
                 >
                   <span className="option-letter" style={{ flexShrink: 0 }}>{String.fromCharCode(65 + index)}</span>
-                  <div className="option-text" style={{ flex: 1 }}>
-                     {typeof option === 'string' ? option : option.text}
-                  </div>
+                  <div 
+                    className="option-text" 
+                    style={{ flex: 1 }} 
+                    dangerouslySetInnerHTML={{ __html: typeof option === 'string' ? option : option.text }}
+                  />
                   {isAnswered && index === question.correctAnswer && <CheckCircle2 className="result-icon correct-icon" />}
                 </button>
               );

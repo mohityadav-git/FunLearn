@@ -4,8 +4,12 @@
   gap: 1.5rem;
   width: 280px;
   position: sticky;
-  top: 2rem;
-  margin-top: 1rem;
+  top: 76px;
+  height: calc(100vh - 76px);
+  margin-top: 0;
+  padding: 1.5rem 0;
+  background: var(--bg-card);
+  border-left: 1px solid rgba(0,0,0,0.05);
 }
 
 .profile-section {

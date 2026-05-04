@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, BookOpen, Search, PlusCircle, Pencil, Save, X } from 'lucide-react';
+import { ArrowLeft, BookOpen, Search, PlusCircle, Pencil, Save, X, Camera } from 'lucide-react';
+import Tesseract from 'tesseract.js';
 import Button from '../components/Button';
 import QuestionEditor from '../components/QuestionEditor';
 import './TeacherDashboard.css';
@@ -32,6 +33,71 @@ const QuestionBank = ({ bank, onUpdateBank, libraryByClass }) => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [editingQuestion, setEditingQuestion] = useState(null);
+  const [isScanning, setIsScanning] = useState(false);
+  const [scanProgress, setScanProgress] = useState(0);
+
+  const handleScan = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setIsScanning(true);
+    setScanProgress(0);
+
+    try {
+      const result = await Tesseract.recognize(
+        file,
+        'eng',
+        { logger: m => {
+          if (m.status === 'recognizing text') {
+            setScanProgress(Math.round(m.progress * 100));
+          }
+        }}
+      );
+      
+      const rawText = result.data.text.trim();
+      
+      // Parse the raw text to separate question from options
+      const lines = rawText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      let questionLines = [];
+      let parsedOptions = [];
+      
+      // Matches A., A), (A), 1., 1), (1), a., a), (a)
+      const optionRegex = /^([a-d1-4][\.\)]|\([a-d1-4]\))\s+(.*)/i;
+      
+      for (const line of lines) {
+        const match = line.match(optionRegex);
+        if (match) {
+          parsedOptions.push(match[2].trim());
+        } else {
+          if (parsedOptions.length === 0) {
+            questionLines.push(line);
+          } else if (parsedOptions.length > 0 && parsedOptions.length <= 4) {
+            // Append continuation lines to the last option found
+            parsedOptions[parsedOptions.length - 1] += ' ' + line;
+          }
+        }
+      }
+
+      const newQuestion = generateEmptyQuestion();
+      newQuestion.text = questionLines.join('\n').trim() || rawText;
+      
+      if (parsedOptions.length > 0) {
+        const newOptions = generateDefaultOptions();
+        for (let i = 0; i < Math.min(parsedOptions.length, 4); i++) {
+          newOptions[i].text = parsedOptions[i];
+        }
+        newQuestion.options = newOptions;
+      }
+      
+      setEditingQuestion(newQuestion);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to scan image. Please try again or type manually.');
+    } finally {
+      setIsScanning(false);
+      setScanProgress(0);
+    }
+  };
 
   const filteredBank = bank.filter(q => 
     q.text.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -177,14 +243,31 @@ const QuestionBank = ({ bank, onUpdateBank, libraryByClass }) => {
     <div className="teacher-dashboard animate-slide-up">
       <header className="dashboard-header" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '1.5rem' }}>
         <Button variant="ghost" onClick={() => navigate('/teacher')}><ArrowLeft size={20} /> Back to Dashboard</Button>
-        <div className="welcome-text" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+        <div className="welcome-text" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
             <h1>Global Question Bank 📚</h1>
             <p>Browse and search all questions created across your entire school network.</p>
           </div>
-          <Button variant="primary" onClick={startCreate}>
-            <PlusCircle size={20} /> Create New Question
-          </Button>
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#f8fafc', color: 'var(--text-dark)', padding: '0.75rem 1.5rem', borderRadius: '8px', cursor: isScanning ? 'not-allowed' : 'pointer', fontWeight: 600, transition: 'all 0.2s', border: '1px solid #cbd5e1', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+              {isScanning ? (
+                <>Scanning... {scanProgress}%</>
+              ) : (
+                <><Camera size={20} /> Scan Question</>
+              )}
+              <input 
+                type="file" 
+                accept="image/*" 
+                capture="environment" 
+                onChange={handleScan} 
+                disabled={isScanning}
+                style={{ display: 'none' }} 
+              />
+            </label>
+            <Button variant="primary" onClick={startCreate}>
+              <PlusCircle size={20} /> Create New Question
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -226,14 +309,14 @@ const QuestionBank = ({ bank, onUpdateBank, libraryByClass }) => {
                     </Button>
                   </div>
                   
-                  <h3 style={{ fontSize: '1.125rem', marginTop: '0.25rem', marginBottom: '0.5rem' }}>{q.text}</h3>
+                  <h3 style={{ fontSize: '1.125rem', marginTop: '0.25rem', marginBottom: '0.5rem' }} dangerouslySetInnerHTML={{ __html: q.text }} />
                   <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                     {q.options.map((opt, i) => {
                       const text = typeof opt === 'string' ? opt : opt.text;
                       const isCorrect = i === q.correctAnswer;
                       return (
                         <div key={i} style={{ padding: '0.25rem 0.75rem', borderRadius: '4px', background: isCorrect ? 'rgba(34, 197, 94, 0.1)' : '#f1f5f9', color: isCorrect ? 'var(--success)' : 'var(--text-muted)', border: isCorrect ? '1px solid var(--success)' : '1px solid transparent', fontSize: '0.875rem', fontWeight: isCorrect ? 'bold' : 'normal' }}>
-                          {text || "(Image Option)"}
+                          {text ? <span dangerouslySetInnerHTML={{ __html: text }} /> : "(Image Option)"}
                         </div>
                       )
                     })}

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Calculator, BookA, Brain, Shapes, CheckCircle2, ChevronRight, Search, Trophy, Tags } from 'lucide-react';
 import Button from '../components/Button';
+import { stripFormatting } from '../utils/textFormatter';
 import './Practice.css';
 
 const Practice = ({ bank, solvedQuestions }) => {
@@ -132,7 +133,7 @@ const Practice = ({ bank, solvedQuestions }) => {
                 <tr key={q.id} className="problem-row" onClick={() => navigate(`/solve/${q.id}`)}>
                   <td className="td-status">{getStatusIcon(q.id)}</td>
                   <td className="td-title">
-                    <span className="problem-link">{q.text.substring(0, 80)}{q.text.length > 80 ? '...' : ''}</span>
+                    <span className="problem-link">{stripFormatting(q.text).substring(0, 80)}{stripFormatting(q.text).length > 80 ? '...' : ''}</span>
                   </td>
                   <td className="td-topic">
                     <span className="topic-badge">{q.topic || 'General'}</span>

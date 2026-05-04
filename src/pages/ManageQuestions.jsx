@@ -108,7 +108,10 @@ const ManageQuestions = ({ exams, onUpdateQuestions, bank, onSyncBank }) => {
                   style={{ width: '22px', height: '22px', accentColor: 'var(--primary)', cursor: questions.some(sel => sel.id === q.id) ? 'not-allowed' : 'pointer' }}
                 />
                 <div style={{ flex: 1, opacity: questions.some(sel => sel.id === q.id) ? 0.5 : 1 }}>
-                  <h4 style={{ margin: 0, fontSize: '1.125rem', color: 'var(--text-dark)' }}>{questions.some(sel => sel.id === q.id) ? "(Already Selected) " : ""}{q.text}</h4>
+                  <h4 style={{ margin: 0, fontSize: '1.125rem', color: 'var(--text-dark)' }}>
+                    {questions.some(sel => sel.id === q.id) ? "(Already Selected) " : ""}
+                    <span dangerouslySetInnerHTML={{ __html: q.text }} />
+                  </h4>
                   <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
                     {q.topic} {q.subtopic && `• ${q.subtopic}`}
                   </span>
@@ -151,14 +154,16 @@ const ManageQuestions = ({ exams, onUpdateQuestions, bank, onSyncBank }) => {
                 </Button>
               </div>
               
-              <h3 style={{ fontSize: '1.125rem', marginTop: '0.25rem', marginBottom: '0.5rem' }}>{qIndex + 1}. {q.text}</h3>
+              <h3 style={{ fontSize: '1.125rem', marginTop: '0.25rem', marginBottom: '0.5rem' }}>
+                {qIndex + 1}. <span dangerouslySetInnerHTML={{ __html: q.text }} />
+              </h3>
               <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                 {q.options.map((opt, i) => {
                   const text = typeof opt === 'string' ? opt : opt.text;
                   const isCorrect = i === q.correctAnswer;
                   return (
                     <div key={i} style={{ padding: '0.25rem 0.75rem', borderRadius: '4px', background: isCorrect ? 'rgba(34, 197, 94, 0.1)' : '#f1f5f9', color: isCorrect ? 'var(--success)' : 'var(--text-muted)', border: isCorrect ? '1px solid var(--success)' : '1px solid transparent', fontSize: '0.875rem', fontWeight: isCorrect ? 'bold' : 'normal' }}>
-                      {text || "(Image Option)"}
+                      {text ? <span dangerouslySetInnerHTML={{ __html: text }} /> : "(Image Option)"}
                     </div>
                   )
                 })}
